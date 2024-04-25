@@ -3,10 +3,11 @@
 # - langchain : https://teddylee777.github.io/langchain/langchain-tutorial-03/ , https://rfriend.tistory.com/839
 
 # python ver : 3.11.2 64bit
+# vsc에서 local환경에 app 실행하려면 커맨드창에 {streamlit run main.py} 입력
 
 # 환경변수(github에 올릴때는 주석 처리한다.)
-# from dotenv import load_dotenv
-# load_dotenv()
+from dotenv import load_dotenv
+load_dotenv()
 
 # streamlit
 import streamlit as st
@@ -16,10 +17,6 @@ from langchain.schema import AIMessage, HumanMessage, SystemMessage
 
 # ChatOpenAI
 from langchain.chat_models import ChatOpenAI
-
-# LLM 모델 생성
-chat_model = ChatOpenAI(model = 'gpt-3.5-turbo-0125', temperature = 0.5)
-
 
 st.image('kbc_logo.png')
 
@@ -51,7 +48,7 @@ if opt_job == '' :
     opt_job = '상관없음'
 
 opt_style = st.radio(
-    r'''$\textsf{\large ✅ STEP5. 원하는 메시지의 스타일을 선택해주세요}$''',
+    r'''$\textsf{\large ✅ STEP5. 원하는 문구의 스타일을 선택해주세요}$''',
     [f'''대출이동서비스로 {opt_prod} 갈아타면 금리는 낮아지고 한도는 높아질 수 있어요.''',
      '첫 달 이자 최대 50만원의 기회! 마이너스 통장은 3만원을 드려요!',
      f'''[KB캐피탈] OOO님 {opt_prod} 갈아타면 우대금리 최고 연0%p 인하 가능해요!''',
@@ -61,6 +58,16 @@ st.text('\n')
 
 opt_etc = st.text_input(r'''$\textsf{\large ✅ STEP6. 위 내용 외에 문구에 추가하고 싶은 내용을 입력해주세요 (ex.봄의 분위기에 맞춰 작성해줘, '금리'라는 단어를 포함해줘)}$''','')
 st.text('\n')
+
+# llm temperature 설정 기능
+st.write(r'''$\textsf{\normalsize ✅ STEP7. 생성형 AI의 자유도를 설정해주세요}$''')
+opt_temp = st.slider(r'''$\textsf{\small\textbf {※ 자유도가 1에 가까울수록 생성형 AI가 다양한 문구를 생성합니다.}}$''', 0.0, 1.0, 0.5, step = 0.1, format="%.1f")
+print(opt_temp)
+st.text('\n')
+
+
+# LLM 모델 생성
+chat_model = ChatOpenAI(model = 'gpt-3.5-turbo-0125', temperature = opt_temp)
 
 # gpt prompt
 # 한글
@@ -76,6 +83,7 @@ st.text('\n')
 # - 내용이 중복되지 않고, 반복적인 문장이 생기지 않도록 자연스러운 글을 작성해주십시오.
 # - 마케팅 문구에 'KB캐피탈'이라는 단어를 반드시 포함해주십시오.
 # """
+
 
 # system 역할 부여
 system_role = f"""
@@ -106,6 +114,8 @@ messages = [ SystemMessage(content=system_role),
 ]
 
 print(messages)
+st.text('\n')
+st.text('\n')
 
 # 답변 메시지 노출
 if st.button('마케팅 문구 생성하기 📋', type= 'primary') :
