@@ -5,8 +5,8 @@
 # python ver : 3.11.2 64bit
 
 # 환경변수(github에 올릴때는 주석 처리한다.)
-from dotenv import load_dotenv
-load_dotenv()
+# from dotenv import load_dotenv
+# load_dotenv()
 
 # streamlit
 import streamlit as st
