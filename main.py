@@ -52,7 +52,7 @@ opt_style = st.radio(
     [f'''대출이동서비스로 {opt_prod} 갈아타면 금리는 낮아지고 한도는 높아질 수 있어요.''',
      '첫 달 이자 최대 50만원의 기회! 마이너스 통장은 3만원을 드려요!',
      f'''[KB캐피탈] OOO님 {opt_prod} 갈아타면 우대금리 최고 연0%p 인하 가능해요!''',
-     f'''축하합니다😊 {opt_prod} 금리 인하 대상자로 선정되셨습니다!''',
+     f'''축하합니다🎉🎉 {opt_prod} 금리 인하 대상자로 선정되셨습니다!''',
      '없음'], horizontal=False)
 st.text('\n')
 
@@ -78,8 +78,8 @@ chat_model = ChatOpenAI(model = 'gpt-3.5-turbo-0125', temperature = opt_temp)
 # - 또한 마케팅 문구 생성 시 추가로 고려해야 할 사항은 '{opt_etc}'입니다.
 # - 다음 문자메시지 예시를 참고해서 작성해주세요. '대출이동서비스로 신용대출 갈아타면 금리는 낮아지고 한도는 높아질 수 있어요.', '첫 달 이자 최대 50만원의 기회! 마이너스 통장은 3만원을 드려요!'
 
-# - 다양한 어휘와 자연스러운 표현을 사용하여, 5개의 마케팅 문구를 작성해주시고, 각 문구는 40자 이내로 작성해주십시오.
-# - 5개의 문구를 구분할 수 있도록 각 문구 앞에 1~5까지의 숫자를 기재해주세요.
+# - 다양한 어휘와 자연스러운 표현을 사용하여, 마케팅 타겟의 특성을 고려한 5개의 마케팅 문구를 작성해주십시오
+# - 각 문구는 50자 이내로 작성해주시고, 5개의 문구를 구분할 수 있도록 각 문구 앞에 1~5까지의 숫자를 기재해주세요.
 # - 내용이 중복되지 않고, 반복적인 문장이 생기지 않도록 자연스러운 글을 작성해주십시오.
 # - 마케팅 문구에 'KB캐피탈'이라는 단어를 반드시 포함해주십시오.
 # """
@@ -102,7 +102,8 @@ if opt_style != '없음' :
 
 # human role 
 human_role = f"""
-- Please write 5 marketing phrases using a variety of vocabulary and natural expressions, and each phrase should be written within 60 characters in Korean.
+- Using a variety of vocabulary and natural expressions, please write five marketing phrases that take into account the characteristics of your marketing target.
+- Please write each phrase within 50 characters, and write a number from 1 to 5 in front of each phrase to distinguish between the 5 phrases.
 - To distinguish between the five phrases, please write a number from 1 to 5 in front of each phrase.
 - Please answer in Korean and write naturally to avoid duplication of content and repetitive sentences.
 - Please be sure to include the word ‘KB캐피탈’ in your marketing text.
@@ -114,7 +115,6 @@ messages = [ SystemMessage(content=system_role),
 ]
 
 print(messages)
-st.text('\n')
 st.text('\n')
 
 # 답변 메시지 노출
