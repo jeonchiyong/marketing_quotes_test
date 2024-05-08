@@ -8,8 +8,8 @@
 # vsc에서 local환경에 app 실행하려면 커맨드창에 {streamlit run main.py} 입력
 
 # 환경변수(github에 올릴때는 주석 처리한다.)
-from dotenv import load_dotenv
-load_dotenv()
+# from dotenv import load_dotenv
+# load_dotenv()
 
 
 # 모든 경고 메시지를 무시하도록 설정
