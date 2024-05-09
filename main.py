@@ -102,14 +102,22 @@ def load_embedding_model() :
 embeddings_model = load_embedding_model()
 
 # 4. 벡터스토어 생성
-vectorstore = FAISS.from_documents(
-    documents=split_docs, embedding=embeddings_model,
-    distance_strategy = DistanceStrategy.COSINE # 코사인유사도로 측정
-)
+@st.cache_data
+def create_vectorstore(_docs, _embed_model) : #  해당 함수의 인자 이름 앞에 밑줄 (_)을 추가하면 해당 인자는 캐싱에서 제외되고, 함수의 실행결과만 캐싱됨
+    vs = FAISS.from_documents(
+        documents=_docs, embedding= _embed_model,
+        distance_strategy = DistanceStrategy.COSINE # 코사인유사도로 측정
+    )
+    return vs
+
+vectorstore = create_vectorstore(split_docs, embeddings_model)
 
 # 5. Retriever 생성
-retriever = vectorstore.as_retriever(search_kwargs={'k':1}) # 단일 문서 검색
+@st.cache_data
+def create_retriever() :
+    return vectorstore.as_retriever(search_kwargs={'k':1}) # 단일 문서 검색
 
+retriever = create_retriever()
 
 st.image('kbc_logo.png')
 
@@ -233,5 +241,5 @@ if st.button('마케팅 문구 생성하기 📋', type= 'primary') : #type 옵�
                    \n \n \n P.S. 참고로 다음 상품 정보를 참고하여 문구를 작성했어요😁
                    \n  {docs[0].page_content}
                    ''')
-        st.success(assistant_message)
+        st.success(f'''🤖 생성결과  \n{assistant_message}''')
 
