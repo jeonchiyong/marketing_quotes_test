@@ -102,7 +102,7 @@ def load_embedding_model() :
 embeddings_model = load_embedding_model()
 
 # 4. 벡터스토어 생성
-@st.cache_data
+# @st.cache_data
 def create_vectorstore(_docs, _embed_model) : #  해당 함수의 인자 이름 앞에 밑줄 (_)을 추가하면 해당 인자는 캐싱에서 제외되고, 함수의 실행결과만 캐싱됨
     vs = FAISS.from_documents(
         documents=_docs, embedding= _embed_model,
