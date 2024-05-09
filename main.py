@@ -55,31 +55,51 @@ from langchain.chat_models import ChatOpenAI
 
 # RAG 생성
 # 1. txt 로드
-loader = TextLoader("240503_KB캐피탈 상품정보.txt", encoding = 'utf-8')
-docs = loader.load()
-print(f"문서의 수: {len(docs)}")
+@st.cache_data
+def get_data():
+    loader = TextLoader("240503_KB캐피탈 상품정보.txt", encoding = 'utf-8')
+    docs = loader.load()
+    print(f"문서의 수: {len(docs)}")
+
+    return docs
+
+# get_data() 함수를 호출하여 docs 변수 정의
+docs = get_data()
+
 
 # 2. split documents
-recursive_text_splitter = RecursiveCharacterTextSplitter(
-    # 작은 청크 크기를 설정합니다.
-    chunk_size=400,
-    chunk_overlap=100,
-    length_function=len,
-    is_separator_regex=False,
-)
-split_docs = recursive_text_splitter.split_documents(docs)
-print(f"나누어진 문서의 수: {len(split_docs)}")
-print('\nsplit docs 살펴보기')
-for i in range(len(split_docs)) :
-    print(split_docs[i],'\n')
+@st.cache_data(hash_funcs={list : lambda _: None}) # 어떤 리스트가 들어오더라도 해시 값을 None으로 설정하여 해당 인자를 캐싱에서 제외
+def split_documents(docs):
+    recursive_text_splitter = RecursiveCharacterTextSplitter(
+        # 작은 청크 크기를 설정합니다.
+        chunk_size=400,
+        chunk_overlap=100,
+        length_function=len,
+        is_separator_regex=False,
+    )
+    split_docs = recursive_text_splitter.split_documents(docs)
+    print(f"나누어진 문서의 수: {len(split_docs)}")
+    print('\nsplit docs 살펴보기')
+    for i in range(len(split_docs)) :
+        print(split_docs[i],'\n')
+    
+    return split_docs
 
+
+# 문서를 처리하여 split_docs 변수에 할당
+split_docs = split_documents(docs)
 
 # 3. 임베딩 객체 생성
-embeddings_model = HuggingFaceEmbeddings(
-    model_name='jhgan/ko-sbert-nli', # 사전학습 임베딩 모델
-    model_kwargs={'device':'cpu'},
-    encode_kwargs={'normalize_embeddings':True}, # 임베딩 정규화하여, 모든 벡터가 같은 범위의 값을 갖도록 함
-)
+@st.cache_resource
+def load_embedding_model() :
+    model = HuggingFaceEmbeddings(
+        model_name='jhgan/ko-sbert-nli', # 사전학습 임베딩 모델
+        model_kwargs={'device':'cpu'},
+        encode_kwargs={'normalize_embeddings':True}, # 임베딩 정규화하여, 모든 벡터가 같은 범위의 값을 갖도록 함
+        )
+    return model
+
+embeddings_model = load_embedding_model()
 
 # 4. 벡터스토어 생성
 vectorstore = FAISS.from_documents(
