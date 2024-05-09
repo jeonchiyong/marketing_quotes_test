@@ -5,3 +5,6 @@
  sentence_transformers
  faiss-cpu # gpu 있으면 '-gpu'로 install
  
+ # cpu, memory monitor
+ psrecord
+ matplotlib
