@@ -230,6 +230,8 @@ human_role = f"""
 - To distinguish between the five phrases, please write a number from 1 to 5 in front of each phrase.
 - Please answer in Korean and write naturally to avoid duplication of content and repetitive sentences.
 - Please be sure to include the word ‘KB캐피탈’ in your marketing text.
+- Let's think step by step.
+- If you do a good job, I'll give you a tip.
 """
 
 
