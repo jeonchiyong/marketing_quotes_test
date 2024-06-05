@@ -32,7 +32,7 @@ from langchain import hub
 from langchain_openai import OpenAIEmbeddings
 
 # document loaders
-# from langchain_community.document_loaders import WebBaseLoader
+from langchain_community.document_loaders import WebBaseLoader
 from langchain.document_loaders import PyPDFLoader
 from langchain_community.document_loaders.csv_loader import CSVLoader
 from langchain_community.document_loaders import TextLoader
